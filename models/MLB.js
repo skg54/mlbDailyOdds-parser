@@ -51,7 +51,7 @@ MLB.getAnalyticsForAdvantagePlayer = function(callback) {
 
           var awayPitcherID = '';
           var homePitcherID = '';
-          if (awayPitcher.length > 1) 
+          if (awayPitcher.length > 0) 
           {
             awayPitcherID += awayPitcher.substring(awayPitcher.lastIndexOf("/") + 1, awayPitcher.length);
             homePitcherID += homePitcher.substring(homePitcher.lastIndexOf("/") + 1, homePitcher.length);
