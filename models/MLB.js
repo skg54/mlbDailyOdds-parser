@@ -1,7 +1,7 @@
 const mysql = require('mysql2');
-const db     = require('./db');
 const async = require('async');
 const fs = require('fs');
+
 const phantom = require('phantom');
 const cheerio = require('cheerio');
 

@@ -1,8 +1,5 @@
 const request = require('request');
-const uuidV4 = require('uuid/v4');
-const bcrypt = require('bcrypt-nodejs');
 const async = require('async');
-const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require("path");
 

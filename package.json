@@ -6,10 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "@sendgrid/mail": "^6.3.1",
     "async": "^2.6.2",
-    "authy": "^1.4.0",
-    "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.13.2",
     "cheerio": "^1.0.0-rc.3",
     "connect-flash": "^0.1.1",
@@ -18,7 +15,6 @@
     "express": "~4.13.1",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.0",
-    "jsonwebtoken": "^8.5.1",
     "morgan": "~1.6.1",
     "mysql2": "^1.6.5",
     "passport": "^0.3.2",
@@ -26,8 +22,7 @@
     "phantom": "^6.2.0",
     "request": "^2.88.0",
     "serve-favicon": "~2.3.0",
-    "twilio": "^3.29.2",
-    "uuid": "^3.0.1"
+    "twilio": "^3.29.2"
   },
   "devDependencies": {}
 }
