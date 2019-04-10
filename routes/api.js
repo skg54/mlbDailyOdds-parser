@@ -12,7 +12,7 @@ var _ph, _page, _outObj;
 const cheerio = require('cheerio');
 const MLB     = require('../models/MLB');
 
-git add .;git commit -am "mlb data concept";
+//git add .;git commit -am "mlb data concept";git push heroku master;
 
 // Routes for authentication (signup, login, logout)
 module.exports = function(app) {
