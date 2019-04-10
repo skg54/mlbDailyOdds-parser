@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <title>MLB Data</title>
+    {{> head}}
+  </head>
+
+  <script>
+    $(document).ready(function() {
+
+      $("#scrapeMLB").click(function(e) {    
+
+        $("#loader").fadeIn();
+        $("#loaderBG").fadeIn();
+        $("pre").fadeOut();
+        $("pre").text('');
+
+        e.preventDefault();
+        $.ajax({   
+            type: "POST",
+            data : "",
+            dataType : 'json',
+            cache: false,  
+            url: "/scrape",   
+            success: function(data){
+              console.log('DATA == ' + JSON.stringify(data));
+
+              var jsonObj = JSON.parse(JSON.stringify(data));
+              var jsonPretty = JSON.stringify(jsonObj, null, '\t');
+
+              $("pre").text(jsonPretty);
+              $("pre").fadeIn();
+
+              $("#loader").fadeOut();
+              $("#loaderBG").fadeOut();
+            }
+          });
+      });
+    });
+
+  </script>
+
+  <body>
+    <div class="container">
+      <div id="loader" style="left: 53% !important;"></div>
+
+      <div id="loaderBG" class="loaderBG" style="width: 100%; height: 200px; position: absolute; z-index: 10; background: rgb(255, 255, 255) none repeat scroll 0% 0%; opacity: 0.55; top: 20px;display: none;">
+      </div>
+
+      <div class="jumbotron" style="border: 1px solid #dedede;">
+
+<!--         <h3>Hello, world!</h3>
+        <p>Welcome to your new Node.js app.</p> -->
+        <p>
+          <div style="width: 220px;margin: 0 auto;">
+            <button class="btn btn-info btn-lg" id="scrapeMLB" style="width: 200px;height: 60px;background: #69C;">Get MLB Data</button>
+          </div>
+        </p>
+      </div>
+      <pre style="display: none;border: 1px solid #dedede;"></pre>
+    </div>
+  </body>
+</html>

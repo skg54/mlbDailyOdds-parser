@@ -1,0 +1,354 @@
+body {
+ padding: 0 5px;
+ font-family: 'Montserrat';
+}
+
+.background {    
+	display: block;
+    text-align: center;
+    height: 90px;
+    padding: 0px;
+    /*padding-left: 15px;*/
+}
+
+.logo {
+	height: 88px;
+	width: 200px;
+	margin: 0;
+	padding-left: 0;
+	position: relative;
+	top: 0px;
+	left: 0px;
+	background: url("/logo.png");
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.container {
+	margin-top: 20px;
+}
+
+.formDiv {
+	/*margin-top: 30px;*/
+	max-width: 470px;
+}
+
+.verifyResponseMessage {
+    text-align: center;
+}
+
+
+.formResponseMessage {
+	position: absolute;
+    top: 0;
+    left: 149px;
+    max-width: 300px;
+    width: 300px;
+    text-align: center;
+}
+
+.formResponseMessage div {
+	padding: 5px 10px;
+}
+
+form {
+	margin-left: 2px;
+}
+
+h1 {
+	font-size: 20px;
+    font-weight: 500;
+    color: #f2a72f;
+    margin: 15px 0;
+}
+
+h3 {
+	font-size: 15px;
+}
+
+.form-group {
+	border: 1px solid #ccc;
+	border-radius: 4px;
+/*	transition: all 0.1s linear;*/
+	min-height: 46px;
+	max-width:430px;
+	margin-bottom: 15px;
+}
+#routesFormGroup {
+	display: none;
+}
+.alert {
+	max-width:432px;
+}
+.alert-info {
+	background: #d9edf7b3;
+}
+.list-inline {
+	max-width: 451px;
+	margin-left: 0px;
+}
+.list-inline > li {
+    max-width: 215px;
+    width: 49.3%;
+    height: 54px;
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.btn-custom {
+    color: #fff;
+    background-color: #d22329;
+    border-color: #d22329;
+	margin-top: 20px;
+	font-weight: 500;
+}
+
+.btn-custom:hover {
+    color: #fff;
+    background-color: #d22329b3;
+    border-color: #d22329b3;
+}
+
+.btn-custom:active {
+    color: #fff;
+    background-color: #ae1d22;
+    border-color: #ae1d22;
+}
+
+.btn-custom:focus {
+    color: #fff;
+    background-color: #d22329b3;
+    border-color: #d22329b3;
+}
+
+
+
+
+
+/*INPUT LABEL ANIMATION - MATERIAL DESIGN */
+* {
+	box-sizing: border-box;
+}
+.inpLbl {
+	position: relative;
+	margin: auto;
+	width: 100%;
+	padding: 0 !important;
+	font-weight: 500 !important;
+}
+
+.inpLbl .label {
+	transform: translateY(-20px) scale(0.73);
+	background: #fff;
+	padding: 3px 3px;
+	left: 14px !important;
+	display: none;
+}
+
+.inp {
+	position: relative;
+	margin: auto;
+	width: 100%;
+	padding: 0 14px;
+}
+.inp .label {
+	position: absolute;
+	top: 11px;
+	left: 10px;
+	font-size: 15px;
+	color: #9098a9;
+	font-weight: 500;
+	transform-origin: 0 0;
+	transition: all 0.2s ease;
+	padding: 3px 0;
+}
+.inp .border {
+/*	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 0px;
+	width: 100%;
+	background: #69C;
+	transform: scaleX(0);
+	transform-origin: 0 0;
+	transition: all 0.15s ease;*/
+}
+.inp input {
+	-webkit-appearance: none;
+	width: 100%;
+	border: 0;
+	left: 0px;
+	font-family: inherit;
+/*	height: 45px;*/
+	font-size: 15px;
+	font-weight: 500;
+	background: none;
+	border-radius: 0;
+	color: #223254;
+	transition: all 0.15s ease;
+	position: relative;
+	top: 10px;
+}
+.inp input:not(:placeholder-shown) + span {
+	color: #223254;
+	transform: translateY(-17px) scale(0.73);
+	background: #fff;
+	padding: 0 5px;
+}
+.inp input:focus {
+	background: none;
+	outline: none;
+}
+.inp input:focus + span {
+	color: #69C;
+	transform: translateY(-17px) scale(0.73);
+	background: #fff;
+	padding: 0 5px;
+}
+.inp input:focus + span + .border {
+	transform: scaleX(1);
+}
+
+.form-group:focus-within {
+	border: 1.5px solid #69C;
+}
+
+
+/* Make circles that indicate the steps of the form: */
+.progressWizard {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  max-width: 430px;
+}
+
+.progressWizard li {
+	float: left;
+	max-width: 107px;
+	width: 25%;
+}
+
+.progressWizardLabels {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  max-width: 350px;
+}
+
+.progressWizardLabels li {
+	float: left;
+	width: 107px;
+}
+
+.wizardLine {
+	max-width: 322px;
+	z-index: -1;
+	height:1.5px; 
+	background: #6699CC4D; 
+	position: relative;
+	top: 10px;
+	left: 45px;
+}
+
+.step {
+  height: 18px;
+  width: 18px;
+  margin: 0 40px;
+  background-color: #cfcfcf;
+  border: none;
+  border-radius: 50%;
+  display: inline-block;
+  opacity: 0.9;
+}
+
+/* Mark the active step: */
+.step.active {
+  opacity: 1;
+  background-color: #9ABCDD;
+}
+
+/* Mark the steps that are finished and valid: */
+.step.finish {
+  background-color: #f2a72f;
+}
+
+.stepText {
+	padding: 4px 0;
+	font-size: 12px;
+	font-weight: 500;
+	width: 107px;
+	display: block;
+}
+
+.stepText.students, .stepText.bus {
+/*	position: relative;
+    left: 7px;*/
+}
+
+.stepText.verify {
+/*	position: relative;
+    left: 3px;*/
+}
+
+
+.jq-toast-wrap {
+	opacity: 0.8;
+}
+.jq-toast-single {
+	position: relative;
+	left: 50px;
+}
+
+
+/* Center the loader */
+
+#loader {
+	display: none;
+	position: absolute;
+	left: 59%;
+	top: 50%;
+	z-index: 9999;
+	width: 150px;
+	height: 150px;
+	margin: -75px 0 0 -75px;
+	border: 5px solid #c5c5c5;
+	border-radius: 50%;
+	border-top: 5px solid #69C;
+	width: 60px;
+	height: 60px;
+	-webkit-animation: spin 2s linear infinite;
+	animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#checkMark {
+	position: absolute;
+	left: 59%;
+	top: 50%;
+	z-index: 9999;
+	margin: -75px 0 0 -75px;
+	width: 80px;
+	height: 80px;
+	background: url("/checkmark.png");
+	background-size: contain;
+    transform: scale(0);
+    transition: all 0.55s;
+    opacity: 0.8;
+}
+
+#checkMark.animate {
+    transform: scale(1);
+}
+
+

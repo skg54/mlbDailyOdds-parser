@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <title>SmartStop Registration</title>
+
+    {{> head}}
+  </head>
+  <script>
+    var busRoutesArray = [];
+    var busRoutesIDArray = [];
+
+    $(document).ready(function() {
+
+      if (/Mobi|Android/i.test(navigator.userAgent)) {
+        // mobile!
+        $("#wizardLine").css('max-width', '78%');
+        $(".stepText").css('width', '100px');
+      }
+      
+      var routesJson = decodeURIComponent("{{{routesEncode}}}");
+      var routesJsonObj = JSON.parse(routesJson);
+      console.log("routes HBS == " + JSON.stringify(routesJsonObj));
+
+      var districtsJson = decodeURIComponent("{{{schoolDistrictsEncode}}}");
+      var districtsJsonObj = JSON.parse(districtsJson);
+
+      var routeArrayJson = decodeURIComponent("{{{routeArrayEncode}}}");
+      var routeArrayJsonObj = JSON.parse(routeArrayJson);
+
+      var routeNamesArrayJson = decodeURIComponent("{{{routeNamesArray}}}");
+      var routeNamesArrayJsonObj = JSON.parse(routeNamesArrayJson);
+
+      var routeIDsArrayJson = decodeURIComponent("{{{routeIDsArray}}}");
+      var routeIDsArrayJsonObj = JSON.parse(routeIDsArrayJson);
+      busRoutesIDArray = routeIDsArrayJsonObj;
+
+      var schoolDistrictIDSelected = decodeURIComponent("{{{schoolDistrictIDSelected}}}");
+      var schoolDistrictSelected = decodeURIComponent("{{{schoolDistrictSelected}}}");
+      console.log('schoolDistrictIDSelected == '+schoolDistrictIDSelected);
+      console.log('routeNamesArrayJsonObj == '+routeNamesArrayJsonObj);
+
+      if (routeArrayJsonObj.length > 0) 
+      {
+        busRoutesArray = routeNamesArrayJsonObj;
+        $("#addedTitle").fadeIn(300);
+        $("#saveRoutesBtn").fadeIn();
+        $("#selectDistrict").children('[value='+schoolDistrictIDSelected+']').attr('selected', true);
+        //$("#selectDistrict").trigger('change');
+
+        var index = $("#selectDistrict").children('option:selected').index();
+
+        if (index > 0) {
+          console.log('ROUTES == '+districtsJsonObj[index-1].routes);
+          $('#routesFormGroup').fadeIn();
+          $('#schoolDistrictLbl').fadeIn();
+          $('#busRoutes').append('<option value=""></option>');
+          var option = '';
+          var routes = districtsJsonObj[index-1].routes;
+          for (var i=0;i<routes.length;i++)
+          {
+            var routeName = routes[i].fleetgroup__name;
+
+            if ($.inArray(routeName, routeNamesArrayJsonObj) > -1) {
+              option += '<option value="'+ routes[i].fleetgroup__id + '" disabled>' + routes[i].fleetgroup__name + '</option>';
+            } else {
+              option += '<option value="'+ routes[i].fleetgroup__id + '">' + routes[i].fleetgroup__name + '</option>';
+            }
+          }
+          $('#busRoutes').append(option);
+
+          $('#busRoutes').trigger('chosen:updated');
+
+        } 
+          
+      }
+
+      $("#selectDistrict").change(function() 
+      {
+        $('#busRoutes').children().remove();
+        $('#busRoutes').trigger('chosen:updated');
+
+        setTimeout(function(){$('#selectDistrict_chosen').removeClass('chosen-container-active');},80);
+        var index = $(this).children('option:selected').index();
+
+        if (index > 0) {
+          console.log(districtsJsonObj[index-1].routes);
+          $('#routesFormGroup').fadeIn();
+          $('#schoolDistrictLbl').fadeIn();
+          $('#busRoutes').append('<option value=""></option>');
+          var option = '';
+          var routes = districtsJsonObj[index-1].routes;
+          for (var i=0;i<routes.length;i++){
+             option += '<option value="'+ routes[i].fleetgroup__id + '">' + routes[i].fleetgroup__name + '</option>';
+          }
+          $('#busRoutes').append(option);
+
+          $('#busRoutes').trigger('chosen:updated');
+
+        } else {
+          $('#schoolDistrictLbl').fadeOut();
+          $('#routesFormGroup').fadeOut();
+        }
+      });
+
+
+      $("#busRoutes").change(function() 
+      {   
+          var index = $('#selectDistrict').children('option:selected').index();
+
+          var districtID = $('#selectDistrict :selected').val();
+          var districtName = $('#selectDistrict option:selected').text();
+
+          var routeID = $('#busRoutes :selected').val();
+          var routeName = $('#busRoutes option:selected').text();
+          var parentID = $('#parentID').val();
+          var routeObj = {'routeName':routeName, 'routeID':routeID};
+          busRoutesArray.push(routeName);
+          busRoutesIDArray.push(routeID);
+
+          var serializedData = "routeName=" + routeName +"&routeID="+routeID+"&parentID="+parentID+"&districtName="+districtName+"&districtID="+districtID;
+
+          $.ajax({   
+              type: "POST",
+              data : serializedData,
+              dataType : 'json',
+              cache: false,  
+              url: "/busroute/add",   
+              success: function(data){
+                  console.log("success RES busroute == " + JSON.stringify(data));
+              }   
+          });   
+
+
+          $('#busRoutes').children().remove();
+          $('#busRoutes').trigger('chosen:updated');
+
+          var alertInfo = '<div class="alert alert-info" style="padding: 11px; border:1px solid #ccc9;margin-bottom: 10px; width: 302px;"><span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true" class="closeX">&times;</span></span>'+routeName +' - '+routeID+'</div>';
+          $(alertInfo).hide().appendTo("#routesAddedAlert").fadeIn(300);
+          $("#addedTitle").fadeIn(300);
+
+          $('#busRoutes').append('<option value=""></option>');
+
+          var option = '';
+          var routes = districtsJsonObj[index-1].routes;
+          for (var i=0;i<routes.length;i++)
+          {
+            var route = routes[i];
+            if ($.inArray(routes[i].fleetgroup__name, busRoutesArray) > -1) 
+            {
+              option += '<option value="'+ routes[i].fleetgroup__id + '" disabled>' + routes[i].fleetgroup__name + '</option>';
+            } 
+            else 
+            {
+              option += '<option value="'+ routes[i].fleetgroup__id + '">' + routes[i].fleetgroup__name + '</option>';
+            }
+          }
+          $('#busRoutes').append(option);
+          $('#busRoutes').trigger('chosen:updated');
+
+          var numSelected = $("#routesAddedAlert").children().length;
+          console.log("busRoutes CHANGE numSelected == "+numSelected);
+          if (numSelected > 0) {
+            $('#saveRoutesBtn').fadeIn();
+          }
+      });
+
+      $("#routesAddedAlert").on("click", ".closeX", function(){
+        console.log('closeAlert');
+        var index = $(this).parent().parent().index();
+        console.log('index ='+index);
+
+        console.log('busRoutesArray == '+ JSON.stringify(busRoutesArray));
+        var parentID = $('#parentID').val();
+        var routeName = busRoutesArray[index];
+        var routeID = busRoutesIDArray[index];
+
+        var serializedData = "routeID=" + routeID +"&parentID="+parentID;
+        console.log('serializedData busroute delete == '+ serializedData);
+
+        $.ajax({   
+            type: "POST",
+            data : serializedData,
+            dataType : 'json',
+            cache: false,  
+            url: "/busroute/delete",   
+            success: function(data){
+                console.log("success RES busroute delete == " + JSON.stringify(data));
+            }   
+        });   
+
+
+        busRoutesArray.splice(index, 1);
+        console.log('busRoutesArray removed item == '+ JSON.stringify(busRoutesArray));
+        $(this).parent().parent().remove();
+
+        var numSelected = $("#routesAddedAlert").children().length;
+        if (numSelected > 0) {
+          $('#saveRoutesBtn').fadeIn();
+          $("#addedTitle").fadeIn();
+          $('#selectDistrict').trigger('chosen:updated');
+          $('#busRoutes').val('').trigger('chosen:updated');
+        } else {
+          $('#saveRoutesBtn').fadeOut(50);
+          $("#addedTitle").fadeOut(50);
+          $('#selectDistrict').val('').trigger('chosen:updated');
+        }
+      });   
+
+      $("#busRoutes").chosen({
+        disable_search_threshold: 10,
+        no_results_text: "District does not have routes",
+        placeholder_text_single: "Choose Bus Routes",
+        width: "100%"
+      });
+
+      $("#selectDistrict").chosen({
+        disable_search_threshold: 10,
+        no_results_text: "District does not have routes",
+        placeholder_text_single: "Choose School District",
+        width: "100%"
+      });
+
+
+      //$("#busRouteForm").submit(function(e) {   
+      $("#saveRoutesBtn").click(function(e) {
+
+        e.preventDefault();
+
+        $("#formResponseMessage").empty();
+        $('#saveRoutesBtn').attr('disabled','disabled');
+
+        var serialized = $(this).serialize();
+        console.log("FORM DATA == " + serialized);
+        
+        setTimeout(function(){location.href = '/submit/'+$('#parentID').val();},500);
+
+        // $.ajax({   
+        //     type: "POST",
+        //     data : serialized,
+        //     dataType : 'json',
+        //     cache: false,  
+        //     url: "/sms/verify",   
+        //     success: function(data){
+        //         console.log("success RES VERIFY == " + data.success);
+        //     }   
+        // });   
+
+        return false;   
+      });
+
+    });
+
+  </script>
+
+  <body>
+
+    <div class="container">
+      <div class="background col-sm-6 col-sm-offset-3">
+        <div class="logo"></div>
+      </div>
+    </div>
+
+
+    <div class="container" style="margin-top: 0px;">
+
+      <div class="row justify-content-center">
+        <div class="formDiv col-lg-6 col-sm-offset-3" id="formDiv" style="min-height: 333px;">
+
+          <!-- Circles which indicates the steps of the form: -->
+          <div style="text-align:center;margin-top:10px;">
+            <div class="wizardLine" id="wizardLine"></div>
+
+            <ul class="progressWizard">
+              <li> <span class="step finish"></span> <span class="stepText register">Register</span></li>
+              <li><span class="step finish"></span> <span class="stepText verify">Verify</span></li>
+              <li><span class="step finish"></span> <span class="stepText students">Students</span></li>
+              <li><span class="step active"></span> <span class="stepText bus">Buses</span></li>
+            </ul>
+          </div>
+
+          <h1>Select Bus Routes</h1>
+
+          <div class="formResponseMessage" id="formResponseMessage"></div>
+
+          <form action="/verify/sms" method="post" id="busRouteForm" style="max-width: 430px;">
+
+            <div class="form-group">
+
+              <label for="selectDistrict" class="inpLbl inp">
+                <select id="selectDistrict" name="selectDistrict">
+<!--                   <option value="School District">Choose School District</option> -->
+                  <option value=""></option>
+                  {{#each schoolDistricts}}
+                    <option value="{{this.id}}">{{this.name}}</option>
+                  {{/each}}
+                </select>
+
+                <span class="label" id="schoolDistrictLbl" style="color:#223254">School District</span>
+                <span class="border"></span>
+              </label>
+
+  
+            </div>
+
+<!--             <div class="form-group" id="routesFormGroup">
+              <select id="busRoutes" name="busRoutes" style="display: none;">
+              
+              </select>
+            </div> -->
+
+            <div class="form-group" id="routesFormGroup" style="width: 70%;">
+              <label for="busRoutes" class="inpLbl inp">
+                <select id="busRoutes" name="busRoutes">
+                  <option value=""></option>
+                </select>
+              </label>
+            </div>
+
+            <input type="hidden" id="phoneNum" name="phone" value="{{ phone }}">
+            <input type="hidden" id="parentID" name="parentID" value="{{ parentID }}">
+
+          </form>
+
+
+          <h3 id="addedTitle" style="display: none;">Routes Added</h3>
+          <div class="routesAddedAlert" id="routesAddedAlert">
+            {{#each routeArray}}
+              <div class="alert alert-info" style="padding: 11px; border:1px solid #ccc9;margin-bottom: 10px; width: 302px;"><span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true" class="closeX">&times;</span></span>{{this.routeName}} - {{this.routeID}}</div>
+            {{/each}}
+          </div>
+
+          <button type="submit" class="btn btn-custom" id="saveRoutesBtn" style="display:none;float: right;width: 115px;height: 36px;">Next</button>
+
+<!--           <hr style="position: absolute;bottom: 45px;width: 100%;">
+
+          <p style="position: absolute;bottom: 25px;width: 100%;">Already have an account? <a href="/login">Login</a></p>
+          <p style="position: absolute;bottom: 0px;width: 100%;">Or return to <a href="/">Home</a>.</p> -->
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

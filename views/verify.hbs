@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <title>SmartStop Registration</title>
+    {{> head}}
+  </head>
+  <script>
+    $(document).ready(function() {
+
+      if (/Mobi|Android/i.test(navigator.userAgent)) {
+        // mobile!
+        $("#wizardLine").css('max-width', '78%');
+        $(".stepText").css('width', '100px');
+      }
+
+      var emailConfirmed = decodeURIComponent("{{{emailConfirmed}}}");
+      console.log('emailConfirmed == '+emailConfirmed);
+
+      if (emailConfirmed == 1) {
+        // var emailConfirmedAlert = '<div class="alert alert-success alert-dismissible" style="border: 1px solid #ccc;padding: 12px; text-align:left;"><span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>Email address confirmed</div>';
+        // $(emailConfirmedAlert).hide().appendTo("#verifyResponseMessage").fadeIn(100);
+        $.toast({
+            heading: 'Success',
+            text: 'Email address confirmed.',
+            position: 'top-center',
+            stack: false,
+            icon: 'success',
+            loader: false
+        });
+
+      }
+
+      $("#resendSMS").click(function(e) {    
+
+        $('#submitBtn').removeAttr('disabled');
+        $.ajax({   
+            type: "POST",
+            data : {phone: $('#phoneNum').val()},
+            dataType : 'json',
+            cache: false,  
+            url: "/sms/resend",   
+            success: function(data){
+                console.log("resendSMS RES == " + data.status);
+            }   
+        });   
+
+      });
+
+      $("#verifyResponseMessage").on("click", 'span', function(){
+        console.log('closeAlert');
+        $(this).parent().fadeOut(50);
+      });   
+
+
+      $("#alertDiv").on("click", 'span', function(){
+        console.log('closeAlert');
+        $(this).parent().fadeOut(50);
+      });   
+
+      $("#smsAuthForm").submit(function(e) {    
+
+        e.preventDefault();
+        
+        $("#loader").fadeIn();
+        $("#loaderBG").fadeIn();
+
+        $("#verifyResponseMessage").empty();
+        $('#submitBtn').attr('disabled','disabled');
+
+        var serialized = $(this).serialize();
+        console.log("FORM DATA == " + serialized);
+
+        $.ajax({   
+            type: "POST",
+            data : serialized,
+            dataType : 'json',
+            cache: false,  
+            url: "/sms/verify",   
+            success: function(data){
+
+                if (!data.success) 
+                {
+                   var htmlError = '<div class="alert alert-danger alert-dismissible"><span type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></span>'+data.message+'</div>';
+                  $(htmlError).hide().appendTo("#verifyResponseMessage").fadeIn(100);
+                  $('#submitBtn').removeAttr('disabled');
+                  $("#loader").fadeOut();
+                  $("#loaderBG").fadeOut();
+                } 
+                else 
+                {
+                  setTimeout(function(){
+                    $("#loader").hide();
+                    $("#checkMark").show();
+                    $("#checkMark").addClass('animate');
+                    setTimeout(function(){location.href = '/children/'+$('#userID').val();},1000);
+                  },1500);
+                }
+                console.log("success RES VERIFY == " + data.success);
+                console.log("message RES VERIFY == " + data.message);
+            }   
+        });   
+
+        return false;   
+      });
+
+    });
+
+  </script>
+
+  <body>
+
+    <div class="container">
+      <div class="background col-sm-6 col-sm-offset-3">
+        <div class="logo"></div>
+      </div>
+    </div>
+
+
+    <div class="container" style="margin-top: 0px;">
+
+      <div class="row justify-content-center">
+        <div class="formDiv col-lg-6 col-sm-offset-3" id="formDiv">
+
+          <div id="loader" style="top: 94%;"></div>
+          <div id="checkMark" style="top: 94%;"></div>
+
+          <div id="loaderBG" class="loaderBG" style="width: 100%;height: 100%;position: absolute;z-index: 10;background: #fff;opacity: 0.65;top: 50px;display: none;min-height:400px;">
+          </div>
+
+          <!-- Circles which indicates the steps of the form: -->
+          <div style="text-align:center;margin-top:10px;">
+            <div class="wizardLine" id="wizardLine"></div>
+
+            <ul class="progressWizard">
+              <li> <span class="step finish"></span> <span class="stepText register">Register</span></li>
+              <li><span class="step active"></span> <span class="stepText verify">Verify</span></li>
+              <li><span class="step"></span> <span class="stepText students">Students</span></li>
+              <li><span class="step"></span> <span class="stepText bus">Buses</span></li>
+            </ul>
+          </div>
+
+          <h1>Phone Number Verification</h1>
+
+          <div class="alert alert-warning alert-dismissible" id="alertDiv" style="border: 1px solid #ccc;padding: 12px;">
+            <span type="button" class="close" data-dismiss="alert" aria-label="Close" style="right: 0px;top: 1px;"><span aria-hidden="true">&times;</span></span>
+           Didn't receive a code? <a id="resendSMS" href="javascript:void(0)">Resend</a>
+         </div>
+
+          <div class="verifyResponseMessage" id="verifyResponseMessage"></div>
+
+          <form action="/verify/sms" method="post" id="smsAuthForm" style="max-width: 432px;">
+
+            <div class="form-group">
+              <label for="inp" class="inp">
+                <input type="text" id="inp" placeholder="&nbsp;" name="code" required>
+                <span class="label">Verification code</span>
+                <span class="border"></span>
+              </label>
+            </div>
+
+            <input type="hidden" id="phoneNum" name="phone" value="{{ phone }}">
+            <input type="hidden" id="userID" name="userID" value="{{ id }}">
+
+            <button type="submit" class="btn btn-custom" id="submitBtn" style="float:right;">Verify</button>
+          </form>
+
+          <!--<hr>
+          <p>Already have an account? <a href="/login">Login</a></p>
+          <p>Or return to <a href="/">Home</a>.</p> -->
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
