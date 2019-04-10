@@ -10,6 +10,11 @@
   <script>
     $(document).ready(function() {
 
+      if (/Mobi|Android/i.test(navigator.userAgent)) {
+        // mobile!
+        $("#loader").css('left', '61%');
+      }
+
       $("#scrapeMLB").click(function(e) {    
 
         $("#loader").fadeIn();
