@@ -48,8 +48,14 @@ MLB.getAnalyticsForAdvantagePlayer = function(callback) {
 
           var awayPitcher = $(this).find('#teams').find('.away .pitchers').find('a').attr('href');
           var homePitcher = $(this).find('#teams').find('.home .pitchers').find('a').attr('href');
-          var awayPitcherID = awayPitcher.substring(awayPitcher.lastIndexOf("/") + 1, awayPitcher.length);
-          var homePitcherID = homePitcher.substring(homePitcher.lastIndexOf("/") + 1, homePitcher.length);
+
+          var awayPitcherID = '';
+          var homePitcherID = '';
+          if (awayPitcher.length > 1) 
+          {
+            awayPitcherID += awayPitcher.substring(awayPitcher.lastIndexOf("/") + 1, awayPitcher.length);
+            homePitcherID += homePitcher.substring(homePitcher.lastIndexOf("/") + 1, homePitcher.length);
+          }
 
 
           // console.log('line == '+line);
