@@ -35,7 +35,7 @@
               var jsonObj = JSON.parse(JSON.stringify(data));
               var jsonPretty = JSON.stringify(jsonObj, null, '\t');
 
-              $("pre").text(jsonPretty);
+              $("pre").text(data.csv);
               $("pre").fadeIn();
 
               $("#loader").fadeOut();

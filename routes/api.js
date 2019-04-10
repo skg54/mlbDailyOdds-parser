@@ -7,6 +7,7 @@ var phantom = require('phantom');
 var _ph, _page, _outObj;
 
 const cheerio = require('cheerio');
+const { Parser } = require('json2csv');
 const MLB     = require('../models/MLB');
 
 //git add .;git commit -am "mlb data concept";git push heroku master;
@@ -28,9 +29,16 @@ module.exports = function(app) {
       //console.log('Product json == '+gameData);
       console.log(err)
       var jsonGameData = JSON.stringify(gameData);
+      var jsonParseGameData = JSON.parse(JSON.stringify(gameData));
+      const fields = ['homeTeam', 'awayTeam', 'homePitcherID', 'awayPitcherID', 'line'];
+      const json2csvParser = new Parser({ fields });
+      const csv = json2csvParser.parse(jsonParseGameData);
+
+
       console.log('Product json == '+jsonGameData);
+      console.log('Product csv == '+csv);
       // res.end(gameData);
-      return res.json(gameData);
+      return res.json({'csv':csv});
     });
 
 

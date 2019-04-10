@@ -16,7 +16,16 @@ function MLB()
 
 MLB.getAnalyticsForAdvantagePlayer = function(callback) {
 
-    var url = 'http://www.espn.com/mlb/scoreboard/_/date/20190410';
+    var dateObj = new Date();
+
+    var month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+    // make date 2 digits
+    var date = ('0' + dateObj.getDate()).slice(-2);
+    // get 4 digit year
+    var year = dateObj.getFullYear();
+    var dateForUrl = year + month + date;
+
+    var url = 'http://www.espn.com/mlb/scoreboard/_/date/'+dateForUrl;
 
     phantom
       .create()
