@@ -107,8 +107,10 @@ MLB.getAnalyticsForAdvantagePlayer = function(callback) {
 
           });
 
-          _page.close();
-          _ph.exit();
+           setTimeout(function(){ 
+            _page.close();
+            _ph.exit();
+          }, 3000);
 
           return callback(null, gameArray);
         });
