@@ -4,7 +4,6 @@ var express      = require('express');
 var exphbs       = require('express-handlebars');
 var favicon      = require('serve-favicon');
 var flash        = require('connect-flash');
-var logger       = require('morgan');
 var path         = require('path');
 var session      = require('express-session');
 
@@ -18,7 +17,6 @@ app.set('view engine', '.hbs');
 // Set up favicon, logging, parsing, static files
 // Uncomment after placing your favicon in public/images/
 //app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
