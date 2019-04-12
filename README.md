@@ -4,3 +4,6 @@ Moneyline, Overunder, Point Spread Odds (Home & Away Team), Average Team Scoring
 
 ### Output
 In CSV or JSON
+
+
+![alt text](https://mlb-data.herokuapp.com/ss.png "")
