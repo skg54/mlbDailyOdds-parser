@@ -5,7 +5,7 @@ const fs = require('fs');
 const phantom = require('phantom');
 const cheerio = require('cheerio');
 
-var _ph, _page, _outObj;
+var _ph, _page, _outObj, _espn;
 
 
 function MLB() 
@@ -35,74 +35,104 @@ MLB.getAnalyticsForAdvantagePlayer = function(callback) {
       })
       .then(page => {
         _page = page;
+        _page.property('customHeaders', {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4'});
         return _page.open(url);
+      })
+      .then(() => {
+          return _page.includeJs('https://code.jquery.com/jquery-3.1.1.min.js');
       })
       .then(status => {
         console.log(status);
         return _page.property('content');
       })
       .then(content => {
+        
+        var scoreboardData = _page.evaluate(function() {
+            return window.espn.scoreboardData;
+        })
+        .then ( espn => { 
+          _espn = espn;
+          //console.log('overUnder == '+JSON.stringify(espn.events[1].competitions[0].odds[0].overUnder))
 
-        var gameArray = new Array ();
-        var $ = cheerio.load(content);
+          var gameArray = new Array ();
+          var overUnderArray = new Array ();
+          var $ = cheerio.load(content);
 
-        $('.scoreboard-wrapper').filter(function() {
-          var lineScore = $(this).find('.sb-linescore');
-          //console.log('lineScore == '+lineScore);
+          var l;
+          for (l = 0; l < _espn.events.length; l++) {
 
-          var line = $(this).find('.line').text();
+            var gameEvt = _espn.events[l]
 
-          var awayTeam = $(this).find('#teams').find('.away .sb-team-abbrev');
-          var homeTeam = $(this).find('#teams').find('.home .sb-team-abbrev');
-
-          var awayPitcher = $(this).find('#teams').find('.away .pitchers').find('a').attr('href');
-          var homePitcher = $(this).find('#teams').find('.home .pitchers').find('a').attr('href');
-
-          var awayPitcherID = '';
-          var homePitcherID = '';
-          if (awayPitcher) 
-          {
-            awayPitcherID += awayPitcher.substring(awayPitcher.lastIndexOf("/") + 1, awayPitcher.length);
-            homePitcherID += homePitcher.substring(homePitcher.lastIndexOf("/") + 1, homePitcher.length);
+            if(gameEvt.competitions[0].hasOwnProperty('odds'))
+            {
+              var overUnder = gameEvt.competitions[0].odds[0].overUnder;
+              console.log('overUnder == '+overUnder);
+              overUnderArray.push(overUnder);
+            }
           }
 
+          var i = 0;
+          $('.scoreboard-wrapper').filter(function() {
+            var lineScore = $(this).find('.sb-linescore');
+            //console.log('lineScore == '+lineScore);
 
-          // console.log('line == '+line);
-          // console.log('awayTeam == '+awayTeam.text());
-          // console.log('homeTeam == '+homeTeam.text());
-          // console.log('awayPitcherID == '+awayPitcherID);
-          // console.log('homePitcherID == '+homePitcherID);
+            var line = $(this).find('.line').text();
 
-          if (line.length > 1) 
-          {
-              var gameObj = {
-                'homeTeam': homeTeam.text(),
-                'awayTeam': awayTeam.text(),
-                'homePitcherID': homePitcherID,
-                'awayPitcherID': awayPitcherID,
-                'line': line
-              };
-              gameArray.push(gameObj);
-          }
+            var awayTeam = $(this).find('#teams').find('.away .sb-team-abbrev');
+            var homeTeam = $(this).find('#teams').find('.home .sb-team-abbrev');
 
+            var awayPitcher = $(this).find('#teams').find('.away .pitchers').find('a').attr('href');
+            var homePitcher = $(this).find('#teams').find('.home .pitchers').find('a').attr('href');
+
+            var awayPitcherID = '';
+            var homePitcherID = '';
+            if (awayPitcher) 
+            {
+              awayPitcherID += awayPitcher.substring(awayPitcher.lastIndexOf("/") + 1, awayPitcher.length);
+              homePitcherID += homePitcher.substring(homePitcher.lastIndexOf("/") + 1, homePitcher.length);
+            }
+
+            if(line.length > 1)
+            {
+                var gameObj = {
+                  'homeTeam': homeTeam.text(),
+                  'awayTeam': awayTeam.text(),
+                  'homePitcherID': homePitcherID,
+                  'awayPitcherID': awayPitcherID,
+                  'line': line,
+                  'o/u': overUnderArray[i]
+                };
+                gameArray.push(gameObj);
+            }
+            i++;
+
+          });
+
+          _page.close();
+          _ph.exit();
+
+          return callback(null, gameArray);
         });
-
-        _page.close();
-        _ph.exit();
-
-        return callback(null, gameArray);
+        
       })
     .catch(e => console.log(e));
 
     // phantom.create().then(function(ph) {
     //   ph.createPage().then(function(page) {
-    //     page.property('customHeaders', {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4'})
-    //     page.open(url).then(function(status) {
+    //     //page.property('customHeaders', {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4'});
+
+    //     //page.settings.userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4';
+    //     //page.property('viewportSize', {width: 480, height: 800});
+    //     //page.property('viewportSize', {width: 1920, height: 1080});
+    //     _page = page;
+
+    //     _page.open(url).then(function(status) {
     //       console.log('status == ' +status);
     //          setTimeout(function() { // give it some time to load
-    //           page.property('content').then(function(content) {
-    //             var $ = cheerio.load(content),
-    //                     data = content;
+
+    //           _page.property('content').then(function(content) {
+    //             var gameArray = new Array ();
+    //             var $ = cheerio.load(content);
 
     //             $('.scoreboard-wrapper').filter(function() {
     //               var lineScore = $(this).find('.sb-linescore');
@@ -116,25 +146,25 @@ MLB.getAnalyticsForAdvantagePlayer = function(callback) {
     //               var awayPitcher = $(this).find('#teams').find('.away .pitchers').find('a').attr('href');
     //               var homePitcher = $(this).find('#teams').find('.home .pitchers').find('a').attr('href');
 
-    //               var awayPitcherID = awayPitcher.substring(awayPitcher.lastIndexOf("/") + 1, awayPitcher.length);
-    //               var homePitcherID = homePitcher.substring(homePitcher.lastIndexOf("/") + 1, homePitcher.length);
+    //               var awayPitcherID = '';
+    //               var homePitcherID = '';
+    //               if (awayPitcher) 
+    //               {
+    //                 awayPitcherID += awayPitcher.substring(awayPitcher.lastIndexOf("/") + 1, awayPitcher.length);
+    //                 homePitcherID += homePitcher.substring(homePitcher.lastIndexOf("/") + 1, homePitcher.length);
+    //               }
 
-
-    //               // console.log('line == '+line);
-
-    //               // console.log('awayTeam == '+awayTeam.text());
-    //               // console.log('homeTeam == '+homeTeam.text());
-
-    //               // console.log('awayPitcherID == '+awayPitcherID);
-    //               // console.log('homePitcherID == '+homePitcherID);
-
-    //               json.push({
-    //                 'homeTeam': homeTeam,
-    //                 'awayTeam': awayTeam,
-    //                 'homePitcherID': homePitcherID,
-    //                 'awayPitcherID': awayPitcherID,
-    //                 'line': line
-    //               });
+    //               if (line.length > 1) 
+    //               {
+    //                   var gameObj = {
+    //                     'homeTeam': homeTeam.text(),
+    //                     'awayTeam': awayTeam.text(),
+    //                     'homePitcherID': homePitcherID,
+    //                     'awayPitcherID': awayPitcherID,
+    //                     'line': line
+    //                   };
+    //                   gameArray.push(gameObj);
+    //               }
 
     //             });
     //             // var bracketData = JSON.stringify(json, null, 4);
@@ -143,9 +173,12 @@ MLB.getAnalyticsForAdvantagePlayer = function(callback) {
     //             page.close();
     //             ph.exit();
     //             //var gameData = JSON.stringify(json);
-    //             return callback(null, json);
+    //             return callback(null, gameArray);
     //             // console.log('Product json == '+JSON.stringify(json));
     //           });
+
+    //           // _page.evaluate(function() {
+    //           // });
 
 
     //          }, 5000);

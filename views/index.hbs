@@ -19,8 +19,10 @@
 
         $("#loader").fadeIn();
         $("#loaderBG").fadeIn();
-        $("pre").fadeOut();
-        $("pre").text('');
+
+        $("#jsonPre").fadeOut();
+        $("#mlbPre").fadeOut();
+        $("#mlbPre").text('');
 
         e.preventDefault();
         $.ajax({   
@@ -35,8 +37,9 @@
               var jsonObj = JSON.parse(JSON.stringify(data));
               var jsonPretty = JSON.stringify(jsonObj, null, '\t');
 
-              $("pre").text(data.csv);
-              $("pre").fadeIn();
+              $("#mlbPre").text(data.csv);
+              $("#mlbPre").fadeIn();
+              $("#jsonPre").fadeIn();
 
               $("#loader").fadeOut();
               $("#loaderBG").fadeOut();
@@ -64,7 +67,78 @@
           </div>
         </p>
       </div>
-      <pre style="display: none;border: 1px solid #dedede;"></pre>
+      <pre id="mlbPre" style="display: none;border: 1px solid #dedede;"></pre>
+
+
+      <pre id="jsonPre" style="display: none;border: 1px solid #dedede;">
+                  {
+                     "awayTeamOdds":{
+                        "averageScore":3.8,
+                        "favorite":false,
+                        "moneyLine":158,
+                        "spreadOdds":-136,
+                        "spreadRecord":{
+                           "losses":6,
+                           "pushes":0,
+                           "summary":"5-6",
+                           "wins":5
+                        },
+                        "team":{
+                           "abbreviation":"PIT",
+                           "displayName":"Pittsburgh Pirates",
+                           "id":"23",
+                           "logo":"https://a.espncdn.com/i/teamlogos/mlb/500/scoreboard/pit.png",
+                           "uid":"s:1~l:10~t:23"
+                        },
+                        "underdog":true
+                     },
+                     "details":"WSH -171",
+                     "homeTeamOdds":{
+                        "averageScore":4.6,
+                        "favorite":true,
+                        "moneyLine":-171,
+                        "spreadOdds":123,
+                        "spreadRecord":{
+                           "losses":5,
+                           "pushes":0,
+                           "summary":"6-5",
+                           "wins":6
+                        },
+                        "team":{
+                           "abbreviation":"WSH",
+                           "displayName":"Washington Nationals",
+                           "id":"20",
+                           "logo":"https://a.espncdn.com/i/teamlogos/mlb/500/scoreboard/wsh.png",
+                           "uid":"s:1~l:10~t:20"
+                        },
+                        "underdog":false
+                     },
+                     "overUnder":8.5,
+                     "provider":{
+                        "id":"25",
+                        "name":"Westgate"
+                     }
+                  }
+
+                   "weather":{
+                      "conditionId":"38",
+                      "displayValue":"Mostly cloudy",
+                      "temperature":49
+                   }
+
+                   "venue":{
+                      "address":{
+                         "city":"Washington",
+                         "state":"D.C."
+                      },
+                      "capacity":41506,
+                      "fullName":"Nationals Park",
+                      "id":"89",
+                      "indoor":false
+                   }
+               
+       </pre>
+
     </div>
   </body>
 </html>

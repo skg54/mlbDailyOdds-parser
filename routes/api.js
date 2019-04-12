@@ -30,7 +30,7 @@ module.exports = function(app) {
       console.log(err)
       var jsonGameData = JSON.stringify(gameData);
       var jsonParseGameData = JSON.parse(JSON.stringify(gameData));
-      const fields = ['homeTeam', 'awayTeam', 'homePitcherID', 'awayPitcherID', 'line'];
+      const fields = ['homeTeam', 'awayTeam', 'homePitcherID', 'awayPitcherID', 'line', 'o/u'];
       const json2csvParser = new Parser({ fields });
       const csv = json2csvParser.parse(jsonParseGameData);
 
