@@ -24,6 +24,7 @@ module.exports = function(app) {
   });
 
   app.post('/scrape',function(req,res) {
+    req.setTimeout(500000);
 
     MLB.getAnalyticsForAdvantagePlayer(function(err, gameData) {
       console.log(err)
