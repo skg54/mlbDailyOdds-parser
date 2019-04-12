@@ -92,17 +92,18 @@ MLB.getAnalyticsForAdvantagePlayer = function(callback) {
 
             if(line.length > 1)
             {
-                var gameObj = {
-                  'homeTeam': homeTeam.text(),
-                  'awayTeam': awayTeam.text(),
-                  'homePitcherID': homePitcherID,
-                  'awayPitcherID': awayPitcherID,
-                  'line': line,
-                  'overUnder': overUnderArray[i]
-                };
-                gameArray.push(gameObj);
+              var gameObj = {
+                'homeTeam': homeTeam.text(),
+                'awayTeam': awayTeam.text(),
+                'homePitcherID': homePitcherID,
+                'awayPitcherID': awayPitcherID,
+                'line': line,
+                'overUnder': overUnderArray[i]
+              };
+              gameArray.push(gameObj);
+
+              i++;
             }
-            i++;
 
           });
 
