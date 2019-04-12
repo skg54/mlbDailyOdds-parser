@@ -10,7 +10,7 @@ const cheerio = require('cheerio');
 const { Parser } = require('json2csv');
 const MLB     = require('../models/MLB');
 
-//git add .;git commit -am "mlb data concept";git push heroku master;
+//git add .;git commit -am "mlb game overunder added";git push heroku master;
 
 // Routes for authentication (signup, login, logout)
 module.exports = function(app) {
@@ -30,7 +30,7 @@ module.exports = function(app) {
       console.log(err)
       var jsonGameData = JSON.stringify(gameData);
       var jsonParseGameData = JSON.parse(JSON.stringify(gameData));
-      const fields = ['homeTeam', 'awayTeam', 'homePitcherID', 'awayPitcherID', 'line', 'o/u'];
+      const fields = ['homeTeam', 'awayTeam', 'homePitcherID', 'awayPitcherID', 'line', 'overUnder'];
       const json2csvParser = new Parser({ fields });
       const csv = json2csvParser.parse(jsonParseGameData);
 

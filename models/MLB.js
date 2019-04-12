@@ -100,7 +100,7 @@ MLB.getAnalyticsForAdvantagePlayer = function(callback) {
                   'homePitcherID': homePitcherID,
                   'awayPitcherID': awayPitcherID,
                   'line': line,
-                  'o/u': overUnderArray[i]
+                  'overUnder': overUnderArray[i]
                 };
                 gameArray.push(gameObj);
             }
