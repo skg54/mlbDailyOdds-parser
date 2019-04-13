@@ -17,12 +17,12 @@
 
       $("#scrapeMLB").click(function(e) {    
 
+        $("#mlbPre").text('');
         $("#loader").fadeIn();
         $("#loaderBG").fadeIn();
 
-        $("#jsonPre").fadeOut();
-        $("#mlbPre").fadeOut();
-        $("#mlbPre").text('');
+        $("#jsonPre").hide();
+        $("#mlbPre").hide();
 
         e.preventDefault();
         $.ajax({   

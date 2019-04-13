@@ -27,7 +27,7 @@ module.exports = function(app) {
     req.setTimeout(500000);
 
     MLB.getAnalyticsForAdvantagePlayer(function(err, gameData) {
-      console.log(err)
+      //console.log(err)
       var jsonParseGameData = JSON.parse(JSON.stringify(gameData));
       var fields = ['homeTeam', 'awayTeam', 'homePitcherID', 'awayPitcherID', 'line', 'overUnder'];
       var json2csvParser = new Parser({ fields });
