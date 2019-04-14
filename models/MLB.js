@@ -36,9 +36,6 @@ MLB.getAnalyticsForAdvantagePlayer = function(callback) {
         _page.property('customHeaders', {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/600.1.3 (KHTML, like Gecko) Version/8.0 Mobile/12A4345d Safari/600.1.4'});
         return _page.open(url);
       })
-      // .then(() => {
-      //     return _page.includeJs('https://code.jquery.com/jquery-3.1.1.min.js');
-      // })
       .then(status => {
         console.log(status);
         return _page.property('content');
@@ -113,7 +110,7 @@ MLB.getAnalyticsForAdvantagePlayer = function(callback) {
           _ph.exit();
 
           return callback(null, gameArray);
-          
+
           setTimeout(function(){ 
           }, 3000);
         });
