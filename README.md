@@ -6,4 +6,4 @@ Moneyline, Overunder, Point Spread Odds (Home & Away Team), Average Team Scoring
 In CSV or JSON
 
 
-![alt text](https://fishhawk.io/scrape/ss.png "")
+![alt text](https://fishhawk.io/scrape/mlb.png "")
