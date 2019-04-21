@@ -64,6 +64,10 @@ MLB.getAnalyticsForAdvantagePlayer = function(callback) {
               console.log('overUnder == '+overUnder);
               overUnderArray.push(overUnder);
             }
+            else
+            {
+              overUnderArray.push(0);
+            }
           }
 
           var i = 0;
@@ -98,9 +102,8 @@ MLB.getAnalyticsForAdvantagePlayer = function(callback) {
                 'overUnder': overUnderArray[i]
               };
               gameArray.push(gameObj);
-
-              i++;
             }
+            i++;
 
           });
 
