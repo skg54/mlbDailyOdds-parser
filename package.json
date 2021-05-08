@@ -26,6 +26,6 @@
     "twilio": "^3.29.2"
   },
   "devDependencies": {
-    "lodash": ">=4.17.13"
+    "lodash": ">=4.17.21"
   }
 }
